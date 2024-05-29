@@ -1,18 +1,26 @@
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import {  useLoaderData, useParams } from "react-router-dom";
 import { saveBooksCart } from "../../utilities/LocalStorage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const BookDetails = () => {
-    const books = useLoaderData();
+  const books = useLoaderData();
+  console.log(books);
     const {id} = useParams()
     const idx = parseInt(id)
-    const book=books.find(book => book.bookId === idx)
-    console.log(book);
+    const book=books.find((item) => item.bookId === idx)
+    
     const { image, bookName, author, description, totalPages, rating, category, tags, publisher, yearOfPublishing } = book;
     
     const handleRead = () => {
-        saveBooksCart(idx)
-        // console.log('clilck');
+      saveBooksCart(idx)
+      toast("Added Successfully");
+        
+  }
+  const handleWishlist = () => {
+    saveBooksCart(idx)
+    toast("WishList Book Added Successfully");
     }
     return (
       <div>
@@ -64,12 +72,20 @@ const BookDetails = () => {
               <span className="font-bold">{rating}</span>
             </p>
             <div className="card-actions my-6 ">
-              <Link >
-                <button onClick={handleRead} className="btn btn-outline btn-primary">Read</button>
-              </Link>
-              <Link >
-                <button className="btn btn-accent">Wishlist</button>
-              </Link>
+              <div>
+                <button
+                  onClick={handleRead}
+                  className="btn btn-outline btn-primary"
+                >
+                  Read
+                </button>
+
+                <ToastContainer></ToastContainer>
+              </div>
+
+              <div>
+                <button onClick={handleWishlist} className="btn btn-accent">Wishlist</button>
+              </div>
             </div>
           </div>
         </div>

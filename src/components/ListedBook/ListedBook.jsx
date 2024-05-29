@@ -1,11 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { Link } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
+import { getStoredBooks } from "../../utilities/LocalStorage";
+import SingleBook from "../SingleBook/SingleBook";
 
 
 const ListedBook = () => {
+  const books = useLoaderData()
+  const [tabIndex, setTabIndex] = useState(0);
+  const [bookList, setBookList] = useState([])
+  // const [displayBooks,setDisplayBooks]=([])
+  // console.log(books);
+  // const handleBooksFilter = (filter) => {
+  //   if (filter === 'all') {
+  //     setDisplayBooks(bookList)
+  //   }
+  //   else if (filter === 'page') {
+  //     const pages = bookList.filter((page) => page.totalPages < 400);
+  //     setDisplayBooks(pages)
+  //   }
+  // }
+  useEffect(() => {
+    const storedBooksId = getStoredBooks()
+    // console.log(storedBooksId);
+    if (books.length > 0) {
+      const listedBooks = [];
+      for (const id of storedBooksId) {
+        console.log(id);
+        const book = books.find((book) => book.bookId === id);
+        listedBooks.push(book)
+      }
+      // console.log(listedBooks);
+      setBookList(listedBooks)
+    }
+    // setDisplayBooks(bookList)
+    // console.log(bookList);
+  },[books])
 
-    const [tabIndex,setTabIndex]=useState(0)
+    // console.log(displayBooks);
     return (
       <div>
         <p className="text-center bg-gray-300 p-2 rounded-xl text-2xl font-bold">
@@ -19,7 +51,10 @@ const ListedBook = () => {
           </summary>
           <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
             <li>
-              <a>Item 1</a>
+              <a>All</a>
+            </li>
+            <li >
+              <a>Pages</a>
             </li>
             <li>
               <a>Item 2</a>
@@ -72,6 +107,12 @@ const ListedBook = () => {
             </svg>
             <span>Wishlist</span>
           </Link>
+        </div>
+        <div>
+          <h1>BookList: {bookList.length}</h1>
+          {bookList.map((items) => (
+            <SingleBook key={items.bookId} items={items}></SingleBook>
+          ))}
         </div>
       </div>
     );
